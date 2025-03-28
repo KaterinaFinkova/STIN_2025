@@ -15,7 +15,7 @@ class StockInfo:
             raise ValueError("Invalid sale: must be 0 (no) or 1 (yes)")
         
         self.name = name
-        self.date = date
+        self.date = date        # timestamp format !
         self.rating = rating
         self.sale = sale
 

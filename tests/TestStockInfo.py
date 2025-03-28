@@ -77,6 +77,18 @@ class TestStockInfo(unittest.TestCase):
         self.assertEqual(stock_list[0].name, "Microsoft")
         self.assertEqual(stock_list[1].name, "Google")
 
+    def test_invalid_json_format(self):
+        invalid_json = "{"
+        with self.assertRaises(ValueError) as context:
+            StockInfo.JSONtoList(invalid_json)
+        self.assertEqual(str(context.exception), "Invalid JSON format")
+
+    def test_json_not_list(self):
+        invalid_json = '{"name": "AAPL", "date": 1672531200, "rating": 5, "sale": 1}'
+        with self.assertRaises(ValueError) as context:
+            StockInfo.JSONtoList(invalid_json)
+        self.assertEqual(str(context.exception), "JSON must be a list of stock items")
+
     def test_list_to_json(self):
         items = [
             StockInfo("Microsoft", 20240326, 8, 1),
