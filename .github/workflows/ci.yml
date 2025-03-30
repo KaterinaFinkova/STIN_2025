@@ -33,10 +33,21 @@ jobs:
         run: |
           pytest --cov=models tests/
 
-      - name: Deploy to Render (if tests pass and on main branch)
-        run: |
-          curl -fsSL https://render.com/docs/deploy/github-action | bash
+  deploy:
+    runs-on: ubuntu-latest
 
-          curl -X POST https://api.render.com/v1/services/YOUR_SERVICE_ID/deploy \
+    steps:
+      - name: Checkout Code
+        needs: [tests]
+        uses: actions/checkout@v2
+
+      - name: Trigger Render Deployment
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+        run: |
+          curl -X POST \
+            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys \
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-            -d '{"branch": "main"}'
+            -H "Content-Type: application/json" \
+            -d '{}'
