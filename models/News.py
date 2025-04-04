@@ -1,5 +1,5 @@
 import json
-from typing import List, Dict
+from typing import Set, List, Dict
 from models.NewsItem import NewsItem
 from bidict import bidict
 
@@ -47,3 +47,6 @@ class News:
 
     def newsCount(self, company: str) -> int:
         return len(self.news_data.get(company, []))
+    
+    def missing_news_companies(self) -> Set[str]:
+        return {company for company, articles in self.news_data.items() if not articles}
