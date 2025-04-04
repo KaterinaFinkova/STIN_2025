@@ -15,6 +15,7 @@ def list_stock():
     stock_list = self.MinMessageFilter.filter(stock_list, news)
     stock_list = self.AIAPIClient.process_news(stock_list, news)
     stock_list = self.NegativeRatingFilter.filter(stock_list)
+    update time stocklist
     return StockInfo.ListToJSON(stock_list)
 
 @app.route('/salestock', methods=['POST'])
