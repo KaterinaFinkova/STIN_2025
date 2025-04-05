@@ -15,6 +15,16 @@ class News:
                 self.symbol_to_company[symbol] = company_name
                 self.company_to_symbol[company_name].add(symbol)
 
+    def loadTickerData(self, company_name: str, ticker_data: list):
+        for item in ticker_data:
+            symbol = item.get("symbol")
+            if not symbol:
+                continue
+
+            if symbol not in self.symbol_to_company:
+                self.symbol_to_company[symbol] = company_name
+                self.company_to_symbol[company_name].add(symbol)
+
     def getArticles(self, company: str):
         return self.news_data.get(company, [])
 
