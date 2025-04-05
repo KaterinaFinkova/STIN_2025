@@ -1,15 +1,20 @@
 import os
 
 from flask import Flask, request, jsonify, render_template
+
+from models.Portfolio import Portfolio
 from models.UserDataManager import UserDataManager, KEY_MIN_NEWS, KEY_MIN_SCORE, KEY_BUY
 from models.forms.UserForm import UserForm
 
 app = Flask(__name__)
+
 app.UserDataManager = UserDataManager()
+app.Portfolio = Portfolio()
 app.config["SECRET_KEY"]=os.environ.get("SECRET")
+
 @app.route('/')
 def home():
-    return render_template("portfolio.html")
+    return render_template("portfolio.html",portfolio=app.Portfolio.get_data())
 
 """
 @app.route('/liststock', methods=['POST'])
@@ -34,8 +39,8 @@ def set_user_values():
                     min_rating=app.UserDataManager.get_value(KEY_MIN_SCORE),
                     buy=app.UserDataManager.get_value(KEY_BUY))
     if form.validate_on_submit():
-        app.UserDataManager.set_value(KEY_MIN_SCORE,request.form.get('min_score',form.min_rating.data))
-        app.UserDataManager.set_value(KEY_MIN_NEWS, request.form.get('min_news',form.min_message.data))
+        app.UserDataManager.set_value(KEY_MIN_SCORE,request.form.get('min_score',form.min_rating.get_data()))
+        app.UserDataManager.set_value(KEY_MIN_NEWS, request.form.get('min_news',form.min_message.get_data()))
         app.UserDataManager.set_value(KEY_BUY, request.form.get('min_news',form.buy.data))
         app.UserDataManager.save_values()
     return render_template("user_setting.html",form=form)

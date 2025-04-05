@@ -27,6 +27,12 @@ class StockInfo:
             "sale": self.sale
         }
 
+    def get_sell(self):
+        return self.sale
+
+    def get_name(self):
+        return self.name
+
     @staticmethod
     def from_dict(data):
         return StockInfo(

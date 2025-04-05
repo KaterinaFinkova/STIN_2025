@@ -1,5 +1,5 @@
 {
-    "min_news": 0,
-    "min_score": 7,
-    "buy": 4
+    "min_news": 1,
+    "min_score": -10,
+    "buy": 1
 }
