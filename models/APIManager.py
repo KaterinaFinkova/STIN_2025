@@ -1,11 +1,11 @@
 import json
 import time
-import News, FinnhubAPI, NewsDataAPI
+from .News import News
+from .FinnhubAPI import FinnhubAPI
 
 class APIManager:
-    def __init__(self, finnhub_api: FinnhubAPI, newsdata_api: NewsDataAPI):
+    def __init__(self, finnhub_api: FinnhubAPI):
         self.finnhub_api = finnhub_api
-        self.newsdata_api = newsdata_api
 
     def fetch_news(self, company_names: set, from_date: str, to_date: str) -> 'News':
         news = News(company_names)
@@ -17,9 +17,10 @@ class APIManager:
         news.JSONtoNewsFinnhub(json_news)
 
         missing_companies = news.missingNewsCompanies()
+        """
         if missing_companies:
-            json_news = self._get_news_with_retry(self.newsdata_api.get_news, list(missing_companies), from_date, to_date)
-            news.JSONtoNewsNewsdata(json_news)
+            ...
+        """
 
         return news
     
