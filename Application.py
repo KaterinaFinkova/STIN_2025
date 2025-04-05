@@ -1,8 +1,12 @@
+import os
+
 from flask import Flask, request, jsonify, render_template
-from models.UserDataManager import UserDataManager
+from models.UserDataManager import UserDataManager, KEY_MIN_NEWS, KEY_MIN_SCORE, KEY_BUY
+from models.forms.UserForm import UserForm
 
 app = Flask(__name__)
-
+app.UserDataManager = UserDataManager()
+app.config["SECRET_KEY"]=os.environ.get("SECRET")
 @app.route('/')
 def home():
     return render_template("portfolio.html")
@@ -22,19 +26,16 @@ def sale_stock():
     stock_list = StockInfo.JSONtoList(request.json)
     self.portfolio.update(stock_list)
     return jsonify({"status": "Portfolio updated"})
-    
- @self.app.route("/user", methods=['GET','POST'])
-        def set_user_values():
-            if request.method == 'POST':
-                self.UserDataManager.set_value('min_score',request.form.get('min_score',None))
-                self.UserDataManager.set_value('min_news', request.form.get('min_news',None))
-                self.UserDataManager.save_values()
-            return render_template("user_setting.html",data=self.UserDataManager.data)
-            
-            
-    def __init__(self):
-        self.app = Flask(__name__)
-        self.UserDataManager = UserDataManager()
-
-        self._register_routes()
 """
+    
+@app.route("/user", methods=['GET','POST'])
+def set_user_values():
+    form = UserForm(min_message=app.UserDataManager.get_value(KEY_MIN_NEWS),
+                    min_rating=app.UserDataManager.get_value(KEY_MIN_SCORE),
+                    buy=app.UserDataManager.get_value(KEY_BUY))
+    if form.validate_on_submit():
+        app.UserDataManager.set_value(KEY_MIN_SCORE,request.form.get('min_score',form.min_rating.data))
+        app.UserDataManager.set_value(KEY_MIN_NEWS, request.form.get('min_news',form.min_message.data))
+        app.UserDataManager.set_value(KEY_BUY, request.form.get('min_news',form.buy.data))
+        app.UserDataManager.save_values()
+    return render_template("user_setting.html",form=form)

@@ -5,14 +5,22 @@
 </head>
 <body>
     <h1>Uživatelské nastavení</h1>
-    <table>
 
-
-    </table>
-    <form method="POST">
-        <input type="number" name="min_news" value={{data.min_news}} required>
-        <input type="number" name="min_score" value={{data.min_score}} required>
-        <button type="submit">Submit</button>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.min_message.label }}<br>
+            {{ form.min_message(size=32) }}
+        </p>
+        <p>
+            {{ form.min_rating.label }}<br>
+            {{ form.min_rating(size=32) }}
+        </p>
+        <p>
+            {{ form.buy.label }}<br>
+            {{ form.buy(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
     </form>
 </body>
 </html>
