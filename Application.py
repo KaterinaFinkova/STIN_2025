@@ -3,6 +3,7 @@ import os
 from flask import Flask, request, jsonify, render_template
 
 from models.Portfolio import Portfolio
+from models.StockInfo import StockInfo
 from models.UserDataManager import UserDataManager, KEY_MIN_NEWS, KEY_MIN_SCORE, KEY_BUY
 from models.forms.UserForm import UserForm
 
@@ -25,13 +26,13 @@ def list_stock():
     stock_list = self.AIAPIClient.process_news(stock_list, news)
     stock_list = self.NegativeRatingFilter.filter(stock_list)
     return StockInfo.ListToJSON(stock_list)
-
+"""
 @app.route('/salestock', methods=['POST'])
 def sale_stock():
     stock_list = StockInfo.JSONtoList(request.json)
-    self.portfolio.update(stock_list)
+    portfolio.update(stock_list)
     return jsonify({"status": "Portfolio updated"})
-"""
+
     
 @app.route("/user", methods=['GET','POST'])
 def set_user_values():
