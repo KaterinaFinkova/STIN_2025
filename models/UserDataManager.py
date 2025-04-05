@@ -8,10 +8,8 @@ KEY_MIN_SCORE = "min_score" #  Která mají negativní hodnocení
 KEY_BUY = "buy" # set buy to this
 
 class UserDataManager:
-
-
     def __init__(self):
-        with open("./Data/User_data.json","r",encoding="utf-8") as f:
+        with open("./data/User_data.json","r",encoding="utf-8") as f:
             self.data = json.load(f)
 
 
@@ -25,5 +23,5 @@ class UserDataManager:
         self.data[key] = value
 
     def save_values(self):
-        with open("./Data/User_data.json", "w", encoding="utf-8") as f:
+        with open("./data/User_data.json", "w", encoding="utf-8") as f:
             json.dump(self.data, f, indent=4)
