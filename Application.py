@@ -52,6 +52,6 @@ def set_user_values():
     if form.validate_on_submit():
         app.UserDataManager.set_value(KEY_MIN_SCORE,request.form.get('min_score',form.min_rating.data))
         app.UserDataManager.set_value(KEY_MIN_NEWS, request.form.get('min_news',form.min_message.data))
-        app.UserDataManager.set_value(KEY_BUY, request.form.get('min_news',form.buy.data))
+        app.UserDataManager.set_value(KEY_BUY, request.form.get('buy stock',form.buy.data))
         app.UserDataManager.save_values()
     return render_template("user_setting.html",form=form)
