@@ -8,3 +8,4 @@ from .NewsItem import NewsItem
 from .APIClient import APIClient
 from .CompanySymbolMapper import CompanySymbolMapper
 from .FMPAPI import FMPAPI
+from .AzureAPI import AzureAPI
