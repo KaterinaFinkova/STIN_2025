@@ -1,16 +1,34 @@
+import json
+import os
+
+from flask import current_app as app
+from models.UserDataManager import KEY_BUY
+
+PATH_PORTFOLIO = "./data/Portfolio.json"
 class Portfolio:
     def __init__(self):
-        self.items = ...
-        self.filters = ...
+        if not os.path.exists(PATH_PORTFOLIO):
+            with open(PATH_PORTFOLIO, 'w') as f:   json.dump(dict(), f, indent=4)
+        with open(PATH_PORTFOLIO, "r", encoding="utf-8") as f:
+            self.data = json.load(f)
 
-        self.buy_quantities = 0      # uživatelem definované množství k nákupu
-        self.min_news = 0            # minimální počet zpráv, ostatní odfiltrují
+    def sell(self,stock):
+        return self.data.pop(stock,None)
 
-    def add_item(self, name, quantity):
-        
+    def buy(self,stock):
+        amount = app.UserDataManager.get_value(KEY_BUY)
+        if stock not in self.data or amount > self.data[stock]:
+            self.data[stock] = amount
 
-    def remove_item(self, name):
-        
+    def save(self):
+        with open(PATH_PORTFOLIO, "w", encoding="utf-8") as f:
+            json.dump(self.data, f, indent=4)
 
-    def get_item(self, name):
-        
+    def buy_or_sell(self,stock_info):
+        if stock_info.get_sell() is True:
+            self.buy(stock_info.get_name())
+        elif stock_info.get_sell() is False:
+            self.sell(stock_info.get_name())
+
+    def get_data(self):
+        return self.data

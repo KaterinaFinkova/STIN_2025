@@ -4,16 +4,20 @@
     <title>Portfolio</title>
 </head>
 <body>
+    {% include 'nav.html' %}
     <h1>Portfolio</h1>
     <table>
         <tr>
             <th>Společnost</th>
             <th>Množství akcií</th>
         </tr>
-        {% for item in portfolio %}
+        {% if not portfolio %}
+        <p>You don't have anything in portfolio</p>
+        {% endif %}
+        {% for name,quantity in portfolio.items() %}
         <tr>
-            <td>{{ item.name }}</td>
-            <td>{{ item.quantity }}</td>
+            <td>{{ name }}</td>
+            <td>{{ quantity }}</td>
         </tr>
         {% endfor %}
     </table>
