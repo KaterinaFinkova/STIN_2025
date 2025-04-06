@@ -4,4 +4,4 @@ class NewsItem:
         self.text = text
 
     def getText(self):
-        return f"{self.headline} {self.text}"
+        return f"{self.headline}" # {self.text}"
