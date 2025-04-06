@@ -1,5 +1,8 @@
 #env variables
 .flaskenv
+#data
+/data/Portfolio.json
+/data/User_data.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

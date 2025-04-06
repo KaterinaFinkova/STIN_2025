@@ -30,8 +30,19 @@ def list_stock():
 """
 @app.route('/salestock', methods=['POST'])
 def sale_stock():
-    stock_list = StockInfo.JSONtoList(request.json)
-    return jsonify({"status": "Portfolio updated"})
+    try:
+        stock_list = StockInfo.JSONtoList(request.get_data(as_text=True))
+        pass
+    except Exception as e:
+        return jsonify({"error": str(e)}),415
+    for stock_info in stock_list:
+        print(stock_info)
+        app.Portfolio.buy_or_sell(stock_info)
+    app.Portfolio.save()
+    return jsonify({"error":""}),200
+
+
+
     
 @app.route("/user", methods=['GET','POST'])
 def set_user_values():
