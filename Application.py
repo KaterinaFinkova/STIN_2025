@@ -1,5 +1,4 @@
 import os
-
 from flask import Flask, request, jsonify, render_template
 
 from models.Portfolio import Portfolio
@@ -21,17 +20,18 @@ def home():
 @app.route('/liststock', methods=['POST'])
 def list_stock():
     stock_list = StockInfo.JSONtoList(request.json)
-    news = self.NewsAPIManager.get_news(stock_list)
-    stock_list = self.MinMessageFilter.filter(stock_list, news)
-    stock_list = self.AIAPIClient.process_news(stock_list, news)
-    stock_list = self.NegativeRatingFilter.filter(stock_list)
+    news = apiManager.fetch_news(stock_list)
+    #stock_list = minMessageFilter.filter(stock_list, news)
+    #stock_list = self.AIAPIClient.process_news(stock_list, news)
+    #stock_list = negativeRatingFilter.filter(stock_list)
+    #update time stocklist ?
     return StockInfo.ListToJSON(stock_list)
+
 """
 @app.route('/salestock', methods=['POST'])
 def sale_stock():
     stock_list = StockInfo.JSONtoList(request.json)
     return jsonify({"status": "Portfolio updated"})
-
     
 @app.route("/user", methods=['GET','POST'])
 def set_user_values():
