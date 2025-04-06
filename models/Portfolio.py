@@ -25,10 +25,14 @@ class Portfolio:
             json.dump(self.data, f, indent=4)
 
     def buy_or_sell(self,stock_info):
-        if stock_info.get_sell() is True:
-            self.buy(stock_info.get_name())
-        elif stock_info.get_sell() is False:
+        if stock_info.get_sell():
             self.sell(stock_info.get_name())
+        else:
+            self.buy(stock_info.get_name())
+
 
     def get_data(self):
         return self.data
+
+    def delete_all(self):
+        self.data={}
