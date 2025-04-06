@@ -1,35 +1,63 @@
-import os
 import unittest
+from unittest.mock import patch
 from datetime import datetime, timedelta
-
-from models.FinnhubAPI import FinnhubAPI
-from models.News import News
-from models.CompanySymbolMapper import CompanySymbolMapper
+from models import FinnhubAPI, News, CompanySymbolMapper
 
 class TestFinnhubAPI(unittest.TestCase):
-    def setUp(self):
-        api_key = os.getenv("FINNHUB_API_KEY")
-        if not api_key:
-            self.skipTest("FINNHUB_API_KEY not set")
 
-        self.api = FinnhubAPI(api_key=api_key)
-        self.company_name = "Apple Inc"
-        self.symbol = "AAPL"
+    def test_get_news(self):
+        api_key = "KEY"
+        api = FinnhubAPI(api_key)
+        company_name = "Apple Inc"
+        symbol = "AAPL"
 
-        self.news = News({self.company_name}, CompanySymbolMapper())
-        self.news.addSymbolMapping(self.company_name, [self.symbol])
+        news = News({company_name}, CompanySymbolMapper())
+        news.addSymbolMapping(company_name, [symbol])
 
-        today = datetime.now().date()
-        self.from_date = str(today - timedelta(days=1))
-        self.to_date = str(today)
+        from_date = str(datetime.now().date() - timedelta(days=1))
+        to_date = str(datetime.now().date())
 
-    def test_get_news_single_company(self):
-        company_names = {self.company_name}
-        self.api.get_news(self.news, company_names, self.from_date, self.to_date)
+        mock_news_data = [
+            {
+                "related": symbol,
+                "headline": "Apple releases new iPhone",
+                "summary": "The iPhone 15 is here."
+            },
+            {
+                "related": symbol,
+                "headline": "Apple stock up",
+                "summary": "Strong earnings report drives price."
+            }
+        ]
 
-        articles = self.news.getArticles(self.company_name)
-        self.assertIsInstance(articles, list)
-        self.assertGreaterEqual(len(articles), 0)
+        with patch.object(api.client, 'company_news', return_value=mock_news_data) as mock_method:
+            company_names = {company_name}
+            api.get_news(news, company_names, from_date, to_date)
 
-        if articles:
-            self.assertNotIn(self.company_name, company_names)
+            mock_method.assert_called_once_with(symbol, _from=from_date, to=to_date)
+
+            articles = news.getArticles(company_name)
+            self.assertEqual(len(articles), 2)
+            self.assertEqual(articles[0].headline, "Apple releases new iPhone")
+            self.assertNotIn(company_name, company_names)
+
+    def test_get_news_api_failure(self):
+        api_key = "FAKE_KEY"
+        api = FinnhubAPI(api_key)
+        company_name = "Apple Inc"
+        symbol = "AAPL"
+
+        news = News({company_name}, CompanySymbolMapper())
+        news.addSymbolMapping(company_name, [symbol])
+
+        from_date = str(datetime.now().date() - timedelta(days=1))
+        to_date = str(datetime.now().date())
+
+        with patch.object(api.client, 'company_news', side_effect=Exception("API error")) as mock_method:
+            company_names = {company_name}
+            api.get_news(news, company_names, from_date, to_date)
+
+            mock_method.assert_called_once()
+
+            self.assertEqual(len(news.getArticles(company_name)), 0)
+            self.assertIn(company_name, company_names)

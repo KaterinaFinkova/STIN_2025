@@ -6,3 +6,5 @@ from .Filters import MinMessagesFilter, NegativeRatingFilter
 from .News import News
 from .NewsItem import NewsItem
 from .APIClient import APIClient
+from .CompanySymbolMapper import CompanySymbolMapper
+from .FMPAPI import FMPAPI

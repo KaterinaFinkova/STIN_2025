@@ -20,7 +20,7 @@ class CompanySymbolMapper:
         return self.symbol_to_company.get(symbol)
     
     def getSymbols(self, company_name : str) :
-        return self.company_to_symbol.get(company_name)
+        return self.company_to_symbol.get(company_name, set())
 
     def hasSymbol(self, symbol: str) -> bool:
         return symbol in self.symbol_to_company

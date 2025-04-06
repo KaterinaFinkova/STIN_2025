@@ -1,22 +1,68 @@
 import unittest
-import os
-from models.News import News
-from models.FMPAPI import FMPAPI
-from models.CompanySymbolMapper import CompanySymbolMapper
+from unittest.mock import patch, MagicMock
+from models import FMPAPI, News, CompanySymbolMapper
 
 class TestFMPAPI(unittest.TestCase):
-    def setUp(self):
-        api_key = os.getenv("FMP_API_KEY")
-        if not api_key:
-            self.skipTest("FMP_API_KEY not set")
 
-        self.api = FMPAPI(api_key)
-        self.company_names = {"Apple", "Amazon", "Google", "Tesla", "GoPro", "Fitbit", "Ford", "Marathon Oil", "Uber", "Starbucks", "Netflix"}
+    def setUp(self):
+        self.api = FMPAPI(api_key="KEY")
+        self.company_names = {
+            "Apple", "Amazon", "Google"
+        }
         self.news = News(self.company_names, CompanySymbolMapper())
 
-    def test_get_tickers_for_apple(self):
-        self.api.get_tickers(self.news, self.company_names.copy())
+    @patch("models.FMPAPI.requests.get")
+    def test_get_tickers_successful_response(self, mock_get):
+        mock_data = [
+            {"symbol": "AAPL", "name": "Apple Inc", "exchangeShortName": "NASDAQ"},
+            {"symbol": "AMZN", "name": "Amazon", "exchangeShortName": "NASDAQ"},
+        ]
 
-        for company in self.company_names:
-            if company in self.news.mapper.company_to_symbol:
-                print(f"{company}: {self.news.mapper.company_to_symbol[company]}")
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = mock_data
+        mock_get.return_value = mock_response
+
+        companies = {"Apple", "Amazon"}
+        self.api.get_tickers(self.news, companies)
+
+        self.assertIn("AAPL", self.news.getSymbols("Apple"))
+        self.assertIn("AMZN", self.news.getSymbols("Amazon"))
+
+        self.assertNotIn("Apple", companies)
+        self.assertNotIn("Amazon", companies)
+
+    @patch("models.FMPAPI.requests.get")
+    def test_get_tickers_no_valid_matches(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = []
+        mock_get.return_value = mock_response
+
+        companies = {"Google"}
+        self.api.get_tickers(self.news, companies)
+
+        self.assertEqual(self.news.getSymbols("Google"), set())
+        self.assertIn("Google", companies)
+
+    @patch("models.FMPAPI.requests.get")
+    def test_get_tickers_api_failure(self, mock_get):
+        mock_response = MagicMock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+
+        companies = {"Apple"}
+        self.api.get_tickers(self.news, companies)
+
+        self.assertEqual(self.news.getSymbols("Apple"), set())
+        self.assertIn("Apple", companies)
+
+    @patch("models.FMPAPI.requests.get")
+    def test_get_tickers_exception_handling(self, mock_get):
+        mock_get.side_effect = Exception("Request failed")
+
+        companies = {"Apple"}
+        self.api.get_tickers(self.news, companies)
+
+        self.assertEqual(self.news.getSymbols("Apple"), set())
+        self.assertIn("Apple", companies)
