@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from models.FinnhubAPI import FinnhubAPI
 from models.News import News
+from models.CompanySymbolMapper import CompanySymbolMapper
 
 class TestFinnhubAPI(unittest.TestCase):
     def setUp(self):
@@ -15,7 +16,7 @@ class TestFinnhubAPI(unittest.TestCase):
         self.company_name = "Apple Inc"
         self.symbol = "AAPL"
 
-        self.news = News({self.company_name})
+        self.news = News({self.company_name}, CompanySymbolMapper())
         self.news.addSymbolMapping(self.company_name, [self.symbol])
 
         today = datetime.now().date()

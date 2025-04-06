@@ -1,29 +1,25 @@
-import json
 from collections import defaultdict
-from typing import Set, List, Dict
 from .NewsItem import NewsItem
+from .CompanySymbolMapper import CompanySymbolMapper
 
 class News:
-    def __init__(self, company_names: set):
+    def __init__(self, company_names: set, mapper):
         self.news_data = {company: [] for company in company_names}
-        self.symbol_to_company = {}
-        self.company_to_symbol = defaultdict(set)
+        self.mapper = mapper
 
     def addSymbolMapping(self, company_name: str, symbols: list):
-        for symbol in symbols:
-            if symbol not in self.symbol_to_company:
-                self.symbol_to_company[symbol] = company_name
-                self.company_to_symbol[company_name].add(symbol)
+        self.mapper.addMapping(company_name, symbols)
 
     def loadTickerData(self, company_name: str, ticker_data: list):
+        symbols = []
         for item in ticker_data:
             symbol = item.get("symbol")
-            if not symbol:
-                continue
+            if symbol:
+                symbols.append(symbol)
+        self.mapper.addMapping(company_name, symbols)
 
-            if symbol not in self.symbol_to_company:
-                self.symbol_to_company[symbol] = company_name
-                self.company_to_symbol[company_name].add(symbol)
+    def getSymbols(self, company_name : str) :
+        return self.mapper.getSymbols(company_name)
 
     def getArticles(self, company: str):
         return self.news_data.get(company, [])
@@ -34,13 +30,11 @@ class News:
             if not symbol:
                 continue
 
-            try:
-                company = self.symbol_to_company[symbol]
-            except KeyError:
+            company = self.mapper.getCompany(symbol)
+            if not company:
                 continue
 
             news_item = NewsItem(item['headline'], item['summary'])
-
             self.news_data[company].append(news_item)
 
     def newsCount(self, company: str) -> int:

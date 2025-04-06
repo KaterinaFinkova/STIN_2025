@@ -10,7 +10,6 @@ class FMPAPI(APIClient):
         self.base_url = "https://financialmodelingprep.com/api/v3/search"
 
     def get_tickers(self, news: News, company_names: set):
-        print(type(company_names))
         for company_name in list(company_names):
             encoded_company_name = urllib.parse.quote(company_name)
             url = f"{self.base_url}?query={encoded_company_name}&apikey={self.api_key}"
