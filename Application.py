@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 app.UserDataManager = UserDataManager()
 app.Portfolio = Portfolio()
-app.config["SECRET_KEY"] = os.environ.get("SECRET")
+app.config["SECRET_KEY"] = os.environ.get("SECRET","dev")
 
 FMPapi = FMPAPI(os.environ.get("FMP_API_KEY"))
 FinnhubApi = FinnhubAPI(os.environ.get("Finnhub_API_KEY"))
