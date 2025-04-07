@@ -14,6 +14,7 @@ DEFAULT_DATA = {KEY_MIN_NEWS:1,KEY_MIN_SCORE:-10,KEY_BUY:1,KEY_DAYS_BACK:50}
 class UserDataManager:
     def __init__(self):
         if not os.path.exists(PATH_USER_DATA):
+            os.makedirs(PATH_USER_DATA)
             with open(PATH_USER_DATA, 'w') as f:
                 json.dump(DEFAULT_DATA, f, indent=4)
         with open(PATH_USER_DATA,"r",encoding="utf-8") as f:
