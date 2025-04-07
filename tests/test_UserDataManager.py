@@ -10,7 +10,6 @@ from Application import app
 
 class TestUserDataManager(unittest.TestCase):
     def test_default_values(self):
-        with app.app_context():
             with app.test_request_context():
                     form = UserForm()
                     for field in form._fields.values():
