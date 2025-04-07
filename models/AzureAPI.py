@@ -1,5 +1,4 @@
 import requests
-import json
 from statistics import mean
 from .StockInfo import StockInfo
 from .News import News
@@ -72,6 +71,6 @@ class AzureAPI:
             else :
                 score = mean(sentiment_scores[idx:idx + indices[i]])
             
-            new_rating = max(-10, min(10, score))
+            new_rating = int(max(-10, min(10, score)))
             stock_info.rating = new_rating
             idx += indices[i]
