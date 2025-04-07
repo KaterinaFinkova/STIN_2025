@@ -21,4 +21,4 @@ class AfterFilter(ABC):
 
 class NegativeRatingFilter(AfterFilter):
     def filter(self, stock_list):
-        return [stock for stock in stock_list if stock.getRating() >= 0]
+        return [stock for stock in stock_list if stock.rating >= 0]
