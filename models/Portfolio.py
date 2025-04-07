@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 
 from flask import current_app as app
 from models.UserDataManager import KEY_BUY
@@ -8,7 +9,7 @@ PATH_PORTFOLIO = "./data/Portfolio.json"
 class Portfolio:
     def __init__(self):
         if not os.path.exists(PATH_PORTFOLIO):
-            os.makedirs(PATH_PORTFOLIO)
+            Path(PATH_PORTFOLIO).parent.mkdir(exist_ok=True,parents=True)
             with open(PATH_PORTFOLIO, 'w') as f:   json.dump(dict(), f, indent=4)
         with open(PATH_PORTFOLIO, "r", encoding="utf-8") as f:
             self.data = json.load(f)
