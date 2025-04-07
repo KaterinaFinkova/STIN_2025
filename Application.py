@@ -2,9 +2,13 @@ import os
 from flask import Flask, request, jsonify, render_template
 from datetime import datetime, timedelta
 
+from wtforms.fields.choices import SelectField
+from wtforms.fields.numeric import IntegerField
+from wtforms.fields.simple import StringField
+
 from models.Portfolio import Portfolio
 from models.StockInfo import StockInfo
-from models.UserDataManager import UserDataManager, KEY_MIN_NEWS, KEY_MIN_SCORE, KEY_BUY
+from models.UserDataManager import UserDataManager, KEY_MIN_NEWS, KEY_MIN_SCORE, KEY_BUY, KEY_DAYS_BACK
 from models.forms.UserForm import UserForm
 from models.Filters import NegativeRatingFilter, MinMessagesFilter
 from models import APIManager, FinnhubAPI, FMPAPI, AzureAPI
@@ -66,12 +70,14 @@ def sale_stock():
 
 @app.route("/user", methods=['GET','POST'])
 def set_user_values():
-    form = UserForm(min_message=app.UserDataManager.get_value(KEY_MIN_NEWS),
-                    min_rating=app.UserDataManager.get_value(KEY_MIN_SCORE),
-                    buy=app.UserDataManager.get_value(KEY_BUY))
+    form = UserForm(min_news=app.UserDataManager.get_value(KEY_MIN_NEWS),
+                    min_score=app.UserDataManager.get_value(KEY_MIN_SCORE),
+                    buy=app.UserDataManager.get_value(KEY_BUY),
+                    days_back=app.UserDataManager.get_value(KEY_DAYS_BACK))
     if form.validate_on_submit():
-        app.UserDataManager.set_value(KEY_MIN_SCORE,request.form.get('min_score',form.min_rating.data))
-        app.UserDataManager.set_value(KEY_MIN_NEWS, request.form.get('min_news',form.min_message.data))
-        app.UserDataManager.set_value(KEY_BUY, request.form.get('buy stock',form.buy.data))
+        test=form.data
+        for field in form._fields.values():
+            if type(field) in (StringField, IntegerField):
+                app.UserDataManager.set_value(field.name,field.data)
         app.UserDataManager.save_values()
     return render_template("user_setting.html",form=form)
