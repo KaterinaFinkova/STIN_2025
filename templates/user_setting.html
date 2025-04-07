@@ -9,12 +9,16 @@
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.min_message.label }}<br>
-            {{ form.min_message(size=32) }}
+            {{ form.min_news.label }}<br>
+            {{ form.min_news(size=32) }}
         </p>
         <p>
-            {{ form.min_rating.label }}<br>
-            {{ form.min_rating(size=32) }}
+            {{ form.min_score.label }}<br>
+            {{ form.min_score(size=32) }}
+        </p>
+         <p>
+            {{ form.days_back.label }}<br>
+            {{ form.days_back(size=32) }}
         </p>
         <p>
             {{ form.buy.label }}<br>
