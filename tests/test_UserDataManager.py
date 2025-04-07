@@ -10,11 +10,12 @@ from Application import app
 
 class TestUserDataManager(unittest.TestCase):
     def test_default_values(self):
-        with app.test_request_context():
-                form = UserForm()
-                for field in form._fields.values():
-                    if type(field) in (StringField, IntegerField):
-                        self.assertTrue(field.name in DEFAULT_DATA)
+        with app.app_context():
+            with app.test_request_context():
+                    form = UserForm()
+                    for field in form._fields.values():
+                        if type(field) in (StringField, IntegerField):
+                            self.assertTrue(field.name in DEFAULT_DATA)
 
     def test_set_and_get(self):
         with app.app_context():
