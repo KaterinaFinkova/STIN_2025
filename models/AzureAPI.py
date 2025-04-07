@@ -1,5 +1,4 @@
 import requests
-import json
 from statistics import mean
 from .StockInfo import StockInfo
 from .News import News
