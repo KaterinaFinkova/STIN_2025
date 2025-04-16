@@ -50,7 +50,7 @@ def list_stock():
     for filter in app.BeforeFilters:
         stock_list = filter.filter(stock_list, news)
 
-    app.AIClient.getSentimentAnalysis(stock_list, news)
+    app.AIClient.getSentimentAnalysis(news, stock_list)
     
     for filter in app.AfterFilters:
         stock_list = filter.filter(stock_list)
