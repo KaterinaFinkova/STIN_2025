@@ -15,7 +15,7 @@ class AzureAPI:
         
         print(sentiment_data)
         
-        for document in sentiment_data['results']['documents']:
+        for document in sentiment_data['documents']:
             positive_score = document['confidenceScores']['positive']
             negative_score = document['confidenceScores']['negative']
             
