@@ -57,7 +57,7 @@ def list_stock():
 @app.route('/salestock', methods=['POST'])
 def sale_stock():
     try:
-        stock_list = StockInfo.JSONtoList(request.get_data(as_text=True))
+        stock_list = StockInfo.JSONtoList(request.json)
         pass
     except Exception as e:
         return jsonify({"error": str(e)}),415

@@ -15,7 +15,7 @@ class TestSaleStock(unittest.TestCase):
                     {"name": "OpenAI", "date": 12345678, "rating": 2, "sale": 0}
                 ]
                 payload = json.dumps(data)
-                response = client.post('/salestock', data=payload,content_type='application/json')
+                response = client.post('/salestock', json=payload, content_type='application/json')
                 data = app.Portfolio.get_data()
                 to_buy = app.UserDataManager.get_value(KEY_BUY)
                 self.assertEqual(to_buy,data["OpenAI"])
@@ -25,10 +25,9 @@ class TestSaleStock(unittest.TestCase):
         with app.app_context():
             with app.test_client() as client:
                 app.Portfolio.delete_all()
-                data = [
-                ]
+                data = []
                 payload = json.dumps(data)
-                response = client.post('/salestock', data=payload,content_type='application/json')
+                response = client.post('/salestock', json=payload,content_type='application/json')
                 data = app.Portfolio.get_data()
                 self.assertEqual("200 OK",response.status)
                 self.assertTrue(not data)
@@ -41,6 +40,6 @@ class TestSaleStock(unittest.TestCase):
                     {"name":"error", "rating":15621}
                 ]
                 payload = json.dumps(data)
-                response = client.post('/salestock', data=payload, content_type='application/json')
+                response = client.post('/salestock', json=payload,content_type='application/json')
                 self.assertEqual("415 UNSUPPORTED MEDIA TYPE", response.status)
 
