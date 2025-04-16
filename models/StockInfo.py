@@ -74,5 +74,5 @@ class StockInfo:
         return json.dumps([item.to_dict() for item in stock_list])
     
     @staticmethod
-    def getNamesList(stock_list):
-        return [company.name for company in stock_list]
+    def getNamesSet(stock_list):
+        return {company.name for company in stock_list}
