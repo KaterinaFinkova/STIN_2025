@@ -10,6 +10,10 @@ class News:
     def addSymbolMapping(self, company_name: str, symbols: list):
         self.mapper.addMapping(company_name, symbols)
 
+    def addArticle(self, company: str, headline: str, summary: str):
+        news_item = NewsItem(headline, summary)
+        self.news_data[company].append(news_item)
+
     def loadTickerData(self, company_name: str, ticker_data: list):
         symbols = []
         for item in ticker_data:
