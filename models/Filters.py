@@ -11,7 +11,7 @@ class BeforeFilter(ABC):
 
 class MinMessagesFilter(BeforeFilter):
     def filter(self, stock_list, news):
-        return [stock for stock in stock_list if news.newsCount(stock.name) >= app.UserDataManager.get_data(KEY_MIN_NEWS)]
+        return [stock for stock in stock_list if news.newsCount(stock.name) >= app.UserDataManager.get_value(KEY_MIN_NEWS)]
 
 
 class AfterFilter(ABC):
