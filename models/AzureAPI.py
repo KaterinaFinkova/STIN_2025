@@ -19,6 +19,8 @@ class AzureAPI:
             positive_score = document['confidenceScores']['positive']
             negative_score = document['confidenceScores']['negative']
             
+            print(positive_score - negative_score)
+
             score = (positive_score - negative_score) * 10
             
             scores.append(score)
@@ -62,11 +64,18 @@ class AzureAPI:
             indices.append(len(company_articles))
         
         sentiment_scores = self._getSentimentsForAll(all_articles)
+
+        print("Sentiment for all")
+        print(sentiment_scores)
         
         idx = 0
         for i, stock_info in enumerate(stockList):
             company_name = stock_info.get_name()
             company_sentiment_scores = sentiment_scores[idx:idx + indices[i]]
+
+            print(company_name)
+            print(indices[i])
+            print(company_sentiment_scores)
             
             if company_sentiment_scores == [] :
                 score = 0
