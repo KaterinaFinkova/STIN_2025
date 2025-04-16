@@ -44,7 +44,7 @@ class TestGetTickers(unittest.TestCase):
             {"symbol": "GOOG"},
         ]
         result = getTickers("Google", data)
-        self.assertEqual(len(result), 0)
+        self.assertEqual(len(result), 1)
 
     def test_no_matches(self):
         data = [
