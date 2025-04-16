@@ -101,3 +101,15 @@ class TestStockInfo(unittest.TestCase):
         ])
 
         self.assertEqual(json.loads(json_output), json.loads(expected_json))
+
+    def test_getNamesList():
+        stock1 = StockInfo("Apple", 1612137600, 9, 1)
+        stock2 = StockInfo("Microsoft", 1612224000, 8, 0)
+        stock3 = StockInfo("Tesla", 1612310400, 10, 1)
+
+        stock_list = [stock1, stock2, stock3]
+
+        expected_names = ["Apple", "Microsoft", "Tesla"]
+        actual_names = StockInfo.getNamesList(stock_list)
+
+        assert actual_names == expected_names, f"Expected {expected_names}, got {actual_names}"

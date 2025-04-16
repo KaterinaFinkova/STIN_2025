@@ -72,3 +72,7 @@ class StockInfo:
         Converts a list of StockInfo objects to a JSON string
         """
         return json.dumps([item.to_dict() for item in stock_list])
+    
+    @staticmethod
+    def getNamesList(stock_list):
+        return [company.name for company in stock_list]
