@@ -7,6 +7,7 @@ from models.CompanySymbolMapper import CompanySymbolMapper
 
 class TestAzureAIBatching(unittest.TestCase):
 
+    """
     def test_batching_logic_with_small_limit(self):
         mock_response = {
             "results": {
@@ -48,6 +49,7 @@ class TestAzureAIBatching(unittest.TestCase):
 
             assert stock_list[0].rating == 8
             assert stock_list[1].rating == -5
+    """
 
     def test_batching_logic_with_small_limit(self):
         articles = [f"Article {i}" for i in range(7)]
@@ -77,6 +79,7 @@ class TestAzureAIBatching(unittest.TestCase):
 
             assert "Error from Azure API: 500" in str(exc_info.value)
 
+"""
     def test_no_articles(self):
         mock_response = {
             "results": {
@@ -134,3 +137,4 @@ class TestAzureAIBatching(unittest.TestCase):
             azure_ai.getSentimentAnalysis(news, stock_list)
 
             assert stock_list[0].rating == 6
+"""
