@@ -68,7 +68,7 @@ def sale_stock():
         print(stock_info)
         app.Portfolio.buy_or_sell(stock_info)
     app.Portfolio.save()
-    return jsonify({"error":""}),200
+    return jsonify({"status":"ok"}),200
 
 
 @app.route("/user", methods=['GET','POST'])
