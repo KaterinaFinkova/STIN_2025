@@ -21,6 +21,9 @@ class FMPAPI(APIClient):
 
                 tickers = getTickers(company_name, data)
 
+                print(company_name)
+                print(tickers)
+
                 if tickers:
                     news.loadTickerData(company_name, tickers)
                     company_names.discard(company_name)

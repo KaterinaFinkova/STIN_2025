@@ -14,6 +14,8 @@ class FinnhubAPI(APIClient):
             for ticker in tickers:
                 try:
                     company_news = self.client.company_news(ticker, _from=from_date, to=to_date)
+                    print("----------")
+                    print(company_news)
                     news.FinnhubtoNews(company_news)
                     company_names.discard(company_name)
                 except Exception as e:
