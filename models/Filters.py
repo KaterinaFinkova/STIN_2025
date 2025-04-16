@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from flask import current_app as app
 
-from models.UserDataManager import KEY_MIN_NEWS
+from models.UserDataManager import KEY_MIN_NEWS, KEY_MIN_SCORE
 
 
 class BeforeFilter(ABC):
@@ -21,4 +21,4 @@ class AfterFilter(ABC):
 
 class NegativeRatingFilter(AfterFilter):
     def filter(self, stock_list):
-        return [stock for stock in stock_list if stock.rating >= 0]
+        return [stock for stock in stock_list if stock.rating >= app.UserDataManager.get_value(KEY_MIN_SCORE)]
