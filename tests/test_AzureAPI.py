@@ -2,10 +2,9 @@ import unittest
 from unittest.mock import patch, MagicMock
 from models import AzureAPI, News, StockInfo
 
-
-class TestAzureAI(unittest.TestCase):
-    def __init__(self):
-        self.mock_response = {
+class TestAzureAIBatching:
+    def test_batching_logic_with_small_limit(self):
+        mock_response = {
             "results": {
                 "documents": [
                     {
@@ -30,9 +29,8 @@ class TestAzureAI(unittest.TestCase):
             }
         }
 
-    def run_test(self):
         with patch('requests.post') as mock_post:
-            mock_post.return_value = MagicMock(status_code=200, json=MagicMock(return_value=self.mock_response))
+            mock_post.return_value = MagicMock(status_code=200, json=MagicMock(return_value=mock_response))
             
             news = News(["CompanyA", "CompanyB"])
             news.add_article("CompanyA", "Positive News", "Everything is great!")
