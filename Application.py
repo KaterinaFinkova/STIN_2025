@@ -39,7 +39,8 @@ def list_stock():
         stock_list = StockInfo.JSONtoList(request.json)
     except Exception as e:
         return jsonify({"error": str(e)}),415
-    company_names = StockInfo.getNamesList(stock_list)
+    company_names = StockInfo.getNamesSet(stock_list)
+
 
     news_from = str(datetime.now().date() - timedelta(days=app.UserDataManager.get_value(KEY_DAYS_BACK)))
     news_to = str(datetime.now().date())

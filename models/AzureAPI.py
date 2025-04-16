@@ -5,7 +5,7 @@ from .News import News
 from typing import List
 
 class AzureAPI:
-    def __init__(self, azure_key: str, max_documents_per_request: int = 500):
+    def __init__(self, azure_key: str, max_documents_per_request: int = 10):
         self.azure_key = azure_key
         self.azure_endpoint = "https://stocknews.cognitiveservices.azure.com/text/analytics/v3.0/sentiment"
         self.max_documents_per_request = max_documents_per_request
@@ -34,7 +34,7 @@ class AzureAPI:
 
         response = requests.post(self.azure_endpoint, headers=headers, json=payload)
         
-        if response.status_code != 200: # do something
+        if response.status_code != 200 :
             raise Exception(f"Error from Azure API: {response.status_code}, {response.text}")
         
         return self._getScoresFromDocuments(response.json())

@@ -11,8 +11,6 @@ class FinnhubAPI(APIClient):
         for company_name in list(company_names):
             tickers = news.getSymbols(company_name)
             
-            # try more than once ?
-            # if few attemps unsuccessful do something - wait, leave
             for ticker in tickers:
                 try:
                     company_news = self.client.company_news(ticker, _from=from_date, to=to_date)
