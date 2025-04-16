@@ -13,6 +13,8 @@ class AzureAPI:
     def _getScoresFromDocuments(self, sentiment_data):
         scores = []
         
+        print(sentiment_data)
+        
         for document in sentiment_data['results']['documents']:
             positive_score = document['confidenceScores']['positive']
             negative_score = document['confidenceScores']['negative']
