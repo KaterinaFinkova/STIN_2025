@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from models import AzureAPI, News, StockInfo
 
-class TestAzureAIBatching:
+class TestAzureAIBatching(unittest.TestCase):
     def test_batching_logic_with_small_limit(self):
         mock_response = {
             "results": {
