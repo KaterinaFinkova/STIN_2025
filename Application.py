@@ -35,8 +35,12 @@ def home():
 
 @app.route('/liststock', methods=['POST'])
 def list_stock():
-    stock_list = StockInfo.JSONtoList(request.json)
+    try:
+        stock_list = StockInfo.JSONtoList(request.json)
+    except Exception as e:
+        return jsonify({"error": str(e)}),415
     company_names = StockInfo.getNamesSet(stock_list)
+
 
     news_from = str(datetime.now().date() - timedelta(days=app.UserDataManager.get_value(KEY_DAYS_BACK)))
     news_to = str(datetime.now().date())
@@ -57,7 +61,7 @@ def list_stock():
 @app.route('/salestock', methods=['POST'])
 def sale_stock():
     try:
-        stock_list = StockInfo.JSONtoList(request.get_data(as_text=True))
+        stock_list = StockInfo.JSONtoList(request.json)
         pass
     except Exception as e:
         return jsonify({"error": str(e)}),415
@@ -65,7 +69,7 @@ def sale_stock():
         print(stock_info)
         app.Portfolio.buy_or_sell(stock_info)
     app.Portfolio.save()
-    return jsonify({"error":""}),200
+    return jsonify({"status":"ok"}),200
 
 
 @app.route("/user", methods=['GET','POST'])
