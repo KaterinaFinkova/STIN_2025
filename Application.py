@@ -38,7 +38,7 @@ def list_stock():
     stock_list = StockInfo.JSONtoList(request.json)
     company_names = StockInfo.getNamesList(stock_list)
 
-    news_from = str(datetime.now().date() - timedelta(days=1))
+    news_from = str(datetime.now().date() - timedelta(days=app.UserDataManager.get_value(KEY_DAYS_BACK)))
     news_to = str(datetime.now().date())
 
     news = app.ApiManager.fetch_news(company_names, news_from, news_to)

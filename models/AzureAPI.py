@@ -34,7 +34,7 @@ class AzureAPI:
 
         response = requests.post(self.azure_endpoint, headers=headers, json=payload)
         
-        if response.status_code != 200:
+        if response.status_code != 200: # do something
             raise Exception(f"Error from Azure API: {response.status_code}, {response.text}")
         
         return self._getScoresFromDocuments(response.json())
