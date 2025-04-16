@@ -46,3 +46,20 @@ class TestAzureAI(unittest.TestCase):
 
             assert stock_list[0].rating == 8
             assert stock_list[1].rating == -5
+
+    def test_batching_logic_with_small_limit(self):
+        articles = [f"Article {i}" for i in range(7)]
+
+        azure = AzureAPI("api_key", max_documents_per_request=3)
+
+        with patch.object(azure, '_getSentimentBatch', return_value=[0]*3) as mock_batch:
+            results = azure._getSentimentsForAll(articles)
+
+            self.assertEqual(mock_batch.call_count, 3)
+
+            calls = mock_batch.call_args_list
+            self.assertEqual(len(calls[0][0][0]), 3)
+            self.assertEqual(len(calls[1][0][0]), 3)
+            self.assertEqual(len(calls[2][0][0]), 1)
+
+            self.assertEqual(len(results), 9)
