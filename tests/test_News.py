@@ -1,7 +1,26 @@
 import unittest
 from models import News, CompanySymbolMapper, NewsItem
+from unittest.mock import MagicMock
 
 class TestNews(unittest.TestCase):
+
+    def test_add_article(self):
+        mock_mapper = MagicMock()
+        mock_mapper.getCompany.return_value = "CompanyA"
+        
+        news = News({"CompanyA", "CompanyB"}, mock_mapper)
+
+        news.addArticle("CompanyA", "Positive News", "Everything is great!")
+        news.addArticle("CompanyA", "Another Positive News", "Another great thing!")
+        
+        articles = news.getArticles("CompanyA")
+        
+        self.assertEqual(len(articles), 2)
+        
+        self.assertEqual(articles[0].headline, "Positive News")
+        self.assertEqual(articles[0].text, "Everything is great!")
+        self.assertEqual(articles[1].headline, "Another Positive News")
+        self.assertEqual(articles[1].text, "Another great thing!")
 
     def test_add_symbol_mapping(self):
         mapper = CompanySymbolMapper()

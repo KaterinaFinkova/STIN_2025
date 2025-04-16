@@ -5,12 +5,12 @@ from .News import News
 from typing import List
 
 class AzureAPI:
-    def __init__(self, azure_key: str):
+    def __init__(self, azure_key: str, max_documents_per_request: int = 500):
         self.azure_key = azure_key
         self.azure_endpoint = "https://stocknews.cognitiveservices.azure.com/text/analytics/v3.0/sentiment"
-        self.max_documents_per_request = 500
+        self.max_documents_per_request = max_documents_per_request
 
-    def _getScoresFromDocuments(sentiment_data):
+    def _getScoresFromDocuments(self, sentiment_data):
         scores = []
         
         for document in sentiment_data['results']['documents']:
