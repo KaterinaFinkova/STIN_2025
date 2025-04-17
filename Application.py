@@ -1,4 +1,6 @@
 import os
+
+import requests
 from flask import Flask, request, jsonify, render_template
 from datetime import datetime, timedelta
 
@@ -18,6 +20,7 @@ app = Flask(__name__)
 app.UserDataManager = UserDataManager()
 app.Portfolio = Portfolio()
 app.config["SECRET_KEY"] = os.environ.get("SECRET","dev")
+url =  os.environ.get("URL","dev")
 
 FMPapi = FMPAPI(os.environ.get("FMP_API_KEY"))
 FinnhubApi = FinnhubAPI(os.environ.get("Finnhub_API_KEY"))
@@ -55,7 +58,15 @@ def list_stock():
     for filter in app.AfterFilters:
         stock_list = filter.filter(stock_list)
 
-    return StockInfo.ListToJSON(stock_list) # should send to burza \rating endpoint later
+    data_to_send = StockInfo.ListToJSON(stock_list)
+    try:
+        response = requests.post(url, json=data_to_send,
+                                 headers={'Content-type': 'application/json', 'Accept': 'application/json'})
+        print(response.status_code)
+    except Exception as e:
+        print(e)
+
+    return data_to_send
 
 
 @app.route('/salestock', methods=['POST'])
