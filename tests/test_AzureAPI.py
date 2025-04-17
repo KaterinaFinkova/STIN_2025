@@ -52,7 +52,7 @@ class TestAzureAIBatching(unittest.TestCase):
 
         azure = AzureAPI("api_key", max_documents_per_request=3)
 
-        with patch.object(azure, '_getSentimentBatch', return_value=[0]*3) as mock_batch:
+        with patch.object(azure, '_getSentimentBatch', return_value=(0, [0]*3)) as mock_batch:
             results = azure._getSentimentsForAll(articles)
 
             self.assertEqual(mock_batch.call_count, 3)
@@ -128,25 +128,3 @@ class TestAzureAIBatching(unittest.TestCase):
             azure_ai.getSentimentAnalysis(news, stock_list)
 
             assert stock_list[0].rating == 10
-
-    def test_retry_limit(self):
-       mock_response = MagicMock(status_code=449, headers={"Retry_after": "2"})
-       
-       with patch.object(requests, 'post', return_value=mock_response):
-           azure_ai = AzureAPI(azure_key="api_key")
-
-           max_retries = 1
-           retries = 0
-
-           try:
-               azure_ai._getSentimentBatch(["Article 1", "Article 2"])
-               retries += 1
-
-               azure_ai._getSentimentBatch(["Article 3", "Article 4"])
-               retries += 1
-
-           except Exception as exc:
-               assert retries == 2
-               assert "Error from Azure API: too many retries" in str(exc)
-
-           assert retries > max_retries

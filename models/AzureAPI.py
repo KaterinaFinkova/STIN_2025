@@ -25,7 +25,7 @@ class AzureAPI:
         
         return scores
 
-    def _getSentimentBatch(self, articles: List[str], retry_time=10) -> dict:
+    def _getSentimentBatch(self, articles: List[str], retry_time=15) -> dict:
         headers = {
             "Ocp-Apim-Subscription-Key": self.azure_key,
             "Content-Type": "application/json"
