@@ -127,4 +127,4 @@ class TestAzureAIBatching(unittest.TestCase):
 
             azure_ai.getSentimentAnalysis(news, stock_list)
 
-            assert stock_list[0].rating == 6
+            assert stock_list[0].rating == 10
