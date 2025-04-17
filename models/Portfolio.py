@@ -27,7 +27,7 @@ class Portfolio:
             json.dump(self.data, f, indent=4)
 
     def buy_or_sell(self,stock_info):
-        if stock_info.get_sell():
+        if stock_info.get_sell() == 0:
             self.sell(stock_info.get_name())
         else:
             self.buy(stock_info.get_name())

@@ -69,7 +69,7 @@ def list_stock():
     except Exception as e:
         print(e)
 
-    #return data_to_send
+    return data_to_send
 
 
 @app.route('/salestock', methods=['POST'])

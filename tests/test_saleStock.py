@@ -12,7 +12,7 @@ class TestSaleStock(unittest.TestCase):
             with app.test_client() as client:
                 app.Portfolio.delete_all()
                 data = [
-                    {"name": "OpenAI", "date": 12345678, "rating": 2, "sale": 0}
+                    {"name": "OpenAI", "date": 12345678, "rating": 2, "sale": 1}
                 ]
                 payload = json.dumps(data)
                 response = client.post('/salestock', json=payload, content_type='application/json')
