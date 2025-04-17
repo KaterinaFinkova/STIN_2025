@@ -80,7 +80,7 @@ class AzureAPI:
             if company_sentiment_scores == [] :
                 score = 0
             else :
-                score = mean(sentiment_scores[idx:idx + indices[i]])
+                score = mean(sentiment_scores[idx:idx + indices[i]]) * 3
             
             new_rating = int(max(-10, min(10, score)))
             stock_info.rating = new_rating
