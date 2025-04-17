@@ -31,7 +31,7 @@ jobs:
 
       - name: Run Tests with Coverage
         run: |
-          pytest --cov=models tests/
+          pytest --cov=models --cov=Application tests/
 
   deploy:
     runs-on: ubuntu-latest
