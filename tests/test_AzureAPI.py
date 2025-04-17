@@ -7,31 +7,28 @@ from models.CompanySymbolMapper import CompanySymbolMapper
 
 class TestAzureAIBatching(unittest.TestCase):
 
-    """
     def test_batching_logic_with_small_limit(self):
         mock_response = {
-            "results": {
-                "documents": [
-                    {
-                        "id": "1",
-                        "sentiment": "positive",
-                        "confidenceScores": {
-                            "positive": 0.8,
-                            "neutral": 0.2,
-                            "negative": 0.0
-                        }
-                    },
-                    {
-                        "id": "2",
-                        "sentiment": "negative",
-                        "confidenceScores": {
-                            "positive": 0.1,
-                            "neutral": 0.3,
-                            "negative": 0.6
-                        }
+            "documents": [
+                {
+                    "id": "1",
+                    "sentiment": "positive",
+                    "confidenceScores": {
+                        "positive": 0.8,
+                        "neutral": 0.2,
+                        "negative": 0.0
                     }
-                ]
-            }
+                },
+                {
+                    "id": "2",
+                    "sentiment": "negative",
+                    "confidenceScores": {
+                        "positive": 0.1,
+                        "neutral": 0.3,
+                        "negative": 0.6
+                    }
+                }
+            ]
         }
 
         with patch('requests.post') as mock_post:
@@ -49,7 +46,6 @@ class TestAzureAIBatching(unittest.TestCase):
 
             assert stock_list[0].rating == 8
             assert stock_list[1].rating == -5
-    """
 
     def test_batching_logic_with_small_limit(self):
         articles = [f"Article {i}" for i in range(7)]
@@ -79,12 +75,9 @@ class TestAzureAIBatching(unittest.TestCase):
 
             assert "Error from Azure API: 500" in str(exc_info.value)
 
-"""
     def test_no_articles(self):
         mock_response = {
-            "results": {
-                "documents": []
-            }
+            "documents": []
         }
         
         with patch.object(requests, 'post', return_value=MagicMock(status_code=200, json=MagicMock(return_value=mock_response))):
@@ -99,28 +92,26 @@ class TestAzureAIBatching(unittest.TestCase):
 
     def test_one_company_multiple_articles(self):
         mock_response = {
-            "results": {
-                "documents": [
-                    {
-                        "id": "1",
-                        "sentiment": "positive",
-                        "confidenceScores": {
-                            "positive": 0.8,
-                            "neutral": 0.2,
-                            "negative": 0.0
-                        }
-                    },
-                    {
-                        "id": "2",
-                        "sentiment": "positive",
-                        "confidenceScores": {
-                            "positive": 0.6,
-                            "neutral": 0.3,
-                            "negative": 0.2
-                        }
+            "documents": [
+                {
+                    "id": "1",
+                    "sentiment": "positive",
+                    "confidenceScores": {
+                        "positive": 0.8,
+                        "neutral": 0.2,
+                        "negative": 0.0
                     }
-                ]
-            }
+                },
+                {
+                    "id": "2",
+                    "sentiment": "positive",
+                    "confidenceScores": {
+                        "positive": 0.6,
+                        "neutral": 0.3,
+                        "negative": 0.2
+                    }
+                }
+            ]
         }
 
         with patch('requests.post') as mock_post:
@@ -137,4 +128,3 @@ class TestAzureAIBatching(unittest.TestCase):
             azure_ai.getSentimentAnalysis(news, stock_list)
 
             assert stock_list[0].rating == 6
-"""
