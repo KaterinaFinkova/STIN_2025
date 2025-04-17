@@ -25,7 +25,7 @@ class AzureAPI:
         
         return scores
 
-    def _getSentimentBatch(self, articles: List[str], retry_time=15) -> dict:
+    def _getSentimentBatch(self, articles: List[str], retry_time=2) -> dict:
         headers = {
             "Ocp-Apim-Subscription-Key": self.azure_key,
             "Content-Type": "application/json"
@@ -49,7 +49,7 @@ class AzureAPI:
         
         return retry, self._getScoresFromDocuments(response.json())
     
-    def _getSentimentsForAll(self, articles: List[str], max_retries=10) -> List[dict]:
+    def _getSentimentsForAll(self, articles: List[str], max_retries=3) -> List[dict]:
         all_results = []
         
         retries = 0
