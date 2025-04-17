@@ -62,12 +62,12 @@ def list_stock():
         stock_list = filter.filter(stock_list)
 
     data_to_send = StockInfo.ListToJSON(stock_list)
-    #try:
-    #    response = requests.post(url, json=data_to_send,
-    #                             headers={'Content-type': 'application/json', 'Accept': 'application/json'})
-    #    print(response.status_code)
-    #except Exception as e:
-    #    print(e)
+    try:
+        response = requests.post(url, json=data_to_send,
+                                 headers={'Content-type': 'application/json', 'Accept': 'application/json'})
+        print(response.status_code)
+    except Exception as e:
+        print(e)
 
     return data_to_send,200
 
