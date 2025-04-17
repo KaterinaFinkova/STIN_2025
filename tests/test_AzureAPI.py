@@ -128,3 +128,15 @@ class TestAzureAIBatching(unittest.TestCase):
             azure_ai.getSentimentAnalysis(news, stock_list)
 
             assert stock_list[0].rating == 10
+
+    def test_retry_limit(self):
+        mock_429 = MagicMock(status_code=449, headers={"Retry_after": "1"}, text="Rate limit")
+        mock_200 = MagicMock(status_code=200, json=MagicMock(return_value={"documents": [{"id": "1", "sentiment": "positive", "confidenceScores": {"positive": 0.7, "neutral": 0.2, "negative": 0.1}}]}))
+
+        with patch('requests.post', side_effect=[mock_429, mock_200]) as mock_post:
+            azure_ai = AzureAPI(azure_key="api_key")
+            retry, result = azure_ai._getSentimentBatch(["Article 1"])
+            
+            assert retry == 1
+            assert len(result) == 1
+            assert mock_post.call_count == 2
