@@ -53,7 +53,10 @@ def list_stock():
     for filter in app.BeforeFilters:
         stock_list = filter.filter(stock_list, news)
 
-    app.AIClient.getSentimentAnalysis(news, stock_list)
+    try:
+        app.AIClient.getSentimentAnalysis(news, stock_list)
+    except Exception as e:
+        return jsonify({"error": str(e)}),429
     
     for filter in app.AfterFilters:
         stock_list = filter.filter(stock_list)
