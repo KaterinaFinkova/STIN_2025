@@ -25,7 +25,7 @@ class AzureAPI:
         
         return scores
 
-    def _getSentimentBatch(self, articles: List[str]) -> dict:
+    def _getSentimentBatch(self, articles: List[str], retry_time=10) -> dict:
         headers = {
             "Ocp-Apim-Subscription-Key": self.azure_key,
             "Content-Type": "application/json"
@@ -40,7 +40,6 @@ class AzureAPI:
         if response.status_code != 200 :
             if response.status_code == 449 :
                 retry = 1
-                retry_time = int(response.headers.get("Retry_after"), 10)
                 print(f"Rate limit exceeded. Retrying after {retry_time} seconds...")
                 time.sleep(retry_time)
             
@@ -54,8 +53,8 @@ class AzureAPI:
         
         retries = 0
         for i in range(0, len(articles), self.max_documents_per_request):
-            retry, batch = articles[i:i + self.max_documents_per_request]
-            result = self._getSentimentBatch(batch)
+            batch = articles[i:i + self.max_documents_per_request]
+            retry, result = self._getSentimentBatch(batch)
             all_results.extend(result)
             retries += retry
 
