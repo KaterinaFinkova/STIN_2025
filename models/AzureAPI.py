@@ -1,3 +1,4 @@
+import time
 import requests
 from statistics import mean
 from .StockInfo import StockInfo
@@ -13,13 +14,10 @@ class AzureAPI:
     def _getScoresFromDocuments(self, sentiment_data):
         scores = []
         
-        print(sentiment_data)
-        
         for document in sentiment_data['documents']:
             positive_score = document['confidenceScores']['positive']
             negative_score = document['confidenceScores']['negative']
             
-            print(positive_score - negative_score)
 
             score = (positive_score - negative_score) * 10
             
@@ -38,18 +36,31 @@ class AzureAPI:
 
         response = requests.post(self.azure_endpoint, headers=headers, json=payload)
         
+        retry = 0
         if response.status_code != 200 :
-            raise Exception(f"Error from Azure API: {response.status_code}, {response.text}")
+            if response.status_code == 449 :
+                retry = 1
+                retry_time = int(response.headers.get("Retry_after"), 10)
+                print(f"Rate limit exceeded. Retrying after {retry_time} seconds...")
+                time.sleep(retry_time)
+            
+            if response.status_code != 200 :
+                raise Exception(f"Error from Azure API: {response.status_code}, {response.text}")
         
-        return self._getScoresFromDocuments(response.json())
+        return retry, self._getScoresFromDocuments(response.json())
     
-    def _getSentimentsForAll(self, articles: List[str]) -> List[dict]:
+    def _getSentimentsForAll(self, articles: List[str], max_retries=10) -> List[dict]:
         all_results = []
         
+        retries = 0
         for i in range(0, len(articles), self.max_documents_per_request):
-            batch = articles[i:i + self.max_documents_per_request]
+            retry, batch = articles[i:i + self.max_documents_per_request]
             result = self._getSentimentBatch(batch)
             all_results.extend(result)
+            retries += retry
+
+            if retries > max_retries :
+                raise Exception(f"Error from Azure API: too many retries")
         
         return all_results
     
@@ -64,17 +75,14 @@ class AzureAPI:
             indices.append(len(company_articles))
         
         sentiment_scores = self._getSentimentsForAll(all_articles)
-
-        print("Sentiment for all")
-        print(sentiment_scores)
         
         idx = 0
         for i, stock_info in enumerate(stockList):
             company_name = stock_info.get_name()
             company_sentiment_scores = sentiment_scores[idx:idx + indices[i]]
 
-            print(company_name)
-            print(indices[i])
+            print(f"Found {indices[i]} articles about company {company_name}")
+            print(f"Sentiment analysis for {company_name}:")
             print(company_sentiment_scores)
             
             if company_sentiment_scores == [] :
@@ -82,6 +90,6 @@ class AzureAPI:
             else :
                 score = mean(sentiment_scores[idx:idx + indices[i]]) * 3
             
-            new_rating = int(max(-10, min(10, score)))
+            new_rating = int(max(-10, min(10, round(score))))
             stock_info.rating = new_rating
             idx += indices[i]
