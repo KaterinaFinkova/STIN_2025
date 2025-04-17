@@ -42,6 +42,7 @@ class AzureAPI:
                 retry = 1
                 print(f"Rate limit exceeded. Retrying after {retry_time} seconds...")
                 time.sleep(retry_time)
+                response = requests.post(self.azure_endpoint, headers=headers, json=payload)
             
             if response.status_code != 200 :
                 raise Exception(f"Error from Azure API: {response.status_code}, {response.text}")
